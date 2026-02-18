@@ -14,6 +14,7 @@ const DEFAULT_CONFIG: Omit<
 > = {
   show_unit: true,
   base_size: "50px",
+  legacy_sizing: false,
   fill_direction: "left",
   unit_opacity: 0.5,
   severity: [],
@@ -70,6 +71,7 @@ export function normalizeConfig(
     entity: config.entity.trim(),
     fill_direction: config.fill_direction ?? DEFAULT_CONFIG.fill_direction,
     base_size: config.base_size?.trim() || DEFAULT_CONFIG.base_size,
+    legacy_sizing: config.legacy_sizing ?? DEFAULT_CONFIG.legacy_sizing,
     show_unit: config.show_unit ?? DEFAULT_CONFIG.show_unit,
     unit_opacity: clamp(config.unit_opacity ?? DEFAULT_CONFIG.unit_opacity, 0, 1),
     tap_action: config.tap_action ?? DEFAULT_CONFIG.tap_action,

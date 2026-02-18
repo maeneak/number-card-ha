@@ -46,6 +46,7 @@ export interface NumberSensorCardConfig {
   value_font_size?: string;
   title_font_size?: string;
   card_padding?: string;
+  legacy_sizing?: boolean;
   unit_opacity?: number;
   min?: number;
   max?: number;
@@ -65,6 +66,7 @@ export interface NumberSensorCardConfig {
 export interface NormalizedNumberSensorCardConfig extends NumberSensorCardConfig {
   show_unit: boolean;
   base_size: string;
+  legacy_sizing: boolean;
   fill_direction: FillDirection;
   unit_opacity: number;
   severity: SeverityConfig[];

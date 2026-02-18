@@ -66,6 +66,9 @@ export class NumberSensorCard extends LitElement {
   }
 
   public getGridOptions() {
+    if (this._config?.legacy_sizing) {
+      return undefined;
+    }
     return {
       columns: 4,
       rows: 2,

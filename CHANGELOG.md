@@ -21,3 +21,4 @@
 - Safe rendering path for value/unit (no `innerHTML`).
 - Unified and normalized v2 schema naming.
 - Severity model uses `min`/`max` ranges (inclusive) with decimal support.
+- Added `legacy_sizing` option to disable `getGridOptions()` and use old sizing behavior.

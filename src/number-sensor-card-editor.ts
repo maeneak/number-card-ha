@@ -21,6 +21,7 @@ const DEFAULT_EDITOR_CONFIG: NumberSensorCardConfig = {
   entity: "",
   show_unit: true,
   base_size: "50px",
+  legacy_sizing: false,
   unit_opacity: 0.5,
   fill_direction: "left",
   tap_action: { action: "more-info" },
@@ -403,6 +404,7 @@ export class NumberSensorCardEditor
       unit: "Unit Override",
       decimals: "Decimals",
       base_size: "Base Size",
+      legacy_sizing: "Legacy Sizing (Ignore HA Grid Options)",
       value_font_size: "Value Font Size",
       title_font_size: "Title Font Size",
       card_padding: "Card Padding",
@@ -434,6 +436,7 @@ export class NumberSensorCardEditor
 
   private readonly _sizingSchema = [
     { name: "base_size", selector: { text: {} } },
+    { name: "legacy_sizing", selector: { boolean: {} } },
     { name: "value_font_size", selector: { text: {} } },
     { name: "title_font_size", selector: { text: {} } },
     { name: "card_padding", selector: { text: {} } },

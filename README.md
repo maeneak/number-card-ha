@@ -34,6 +34,7 @@ entity: sensor.power_usage
 name: Power
 decimals: 1
 show_unit: true
+legacy_sizing: false
 min: 0
 max: 5000
 fill_direction: left
@@ -92,3 +93,8 @@ Severity ranges:
 - Use `min` and/or `max` per row.
 - Ranges are inclusive (`value >= min` and `value <= max`).
 - Decimal/float range bounds are supported.
+
+Legacy sizing mode:
+
+- Set `legacy_sizing: true` to disable `getGridOptions()` and use old size-driven behavior.
+- In this mode, `base_size`, `value_font_size`, `title_font_size`, and `card_padding` control visual sizing without section grid constraints.
