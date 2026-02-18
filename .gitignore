@@ -1,3 +1,7 @@
+node_modules/
+dist/*.map
+coverage/
+
 CLAUDE.md
 bignumber-card-beta.js
 BETA-EXAMPLES.yaml
