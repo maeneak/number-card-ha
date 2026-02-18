@@ -1,5 +1,5 @@
 /* Last modified: 19-Jan-2026 23:10 */
-class BigNumberCard extends HTMLElement {
+class NumberCard extends HTMLElement {
   _DEFAULT_STYLE(){return 'var(--label-badge-blue)';}
   _DEFAULT_COLOR(){return 'var(--primary-text-color)';}
 
@@ -327,9 +327,9 @@ class BigNumberCard extends HTMLElement {
   }
 }
 
-// Visual Editor for Big Number Card
+// Visual Editor for Number Sensor Card
 // Uses ha-textfield for text inputs (maintains focus) and ha-selector for entity/select only
-class BigNumberCardEditor extends HTMLElement {
+class NumberCardEditor extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -851,14 +851,14 @@ class BigNumberCardEditor extends HTMLElement {
   }
 }
 
-customElements.define('bignumber-card-editor', BigNumberCardEditor);
-customElements.define('bignumber-card', BigNumberCard);
+customElements.define('number-card-editor', NumberCardEditor);
+customElements.define('number-card', NumberCard);
 
 // Configure the preview in the Lovelace card picker
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: 'bignumber-card',
-  name: 'Big number card',
+  type: 'number-card',
+  name: 'Number Sensor Card',
   preview: true,
   description: 'A simple card to display big numbers for sensors. It also supports severity levels as background.'
 });
