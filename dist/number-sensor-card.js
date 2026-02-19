@@ -300,7 +300,7 @@ const ct=t=>(e,i)=>{void 0!==i?i.addInitializer(()=>{customElements.define(t,e)}
     .value {
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
-      font-weight: 600;
+      font-weight: 400;
     }
 
     .value span {
@@ -318,7 +318,6 @@ const ct=t=>(e,i)=>{void 0!==i?i.addInitializer(()=>{customElements.define(t,e)}
 
     .title {
       color: var(--number-card-text-color);
-      margin-top: 0.35em;
       font-size: var(--number-card-title-font-size);
       line-height: 1.1;
     }
