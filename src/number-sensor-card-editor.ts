@@ -21,6 +21,7 @@ const DEFAULT_EDITOR_CONFIG: NumberSensorCardConfig = {
   entity: "",
   show_unit: true,
   base_size: "50px",
+  card_padding: "8px",
   legacy_sizing: false,
   unit_opacity: 0.5,
   fill_direction: "left",

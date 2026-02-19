@@ -180,8 +180,7 @@ export class NumberSensorCard extends LitElement {
       "--number-card-title-font-size":
         this._config.title_font_size ?? "calc(var(--number-card-base-size) * 0.5)",
       "--number-card-padding":
-        this._config.card_padding ??
-        "calc(var(--number-card-base-size) * 0.6) calc(var(--number-card-base-size) * 0.3)",
+        this._config.card_padding ?? "8px",
       "--number-card-unit-opacity": String(this._config.unit_opacity),
       "--number-card-percent": `${percent ?? 100}%`
     };

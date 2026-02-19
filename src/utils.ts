@@ -14,6 +14,7 @@ const DEFAULT_CONFIG: Omit<
 > = {
   show_unit: true,
   base_size: "50px",
+  card_padding: "8px",
   legacy_sizing: false,
   fill_direction: "left",
   unit_opacity: 0.5,

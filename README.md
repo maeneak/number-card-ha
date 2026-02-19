@@ -98,3 +98,4 @@ Legacy sizing mode:
 
 - Set `legacy_sizing: true` to disable `getGridOptions()` and use old size-driven behavior.
 - In this mode, `base_size`, `value_font_size`, `title_font_size`, and `card_padding` control visual sizing without section grid constraints.
+- `card_padding` defaults to `8px`.
