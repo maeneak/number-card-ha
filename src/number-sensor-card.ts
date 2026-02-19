@@ -243,7 +243,7 @@ export class NumberSensorCard extends LitElement {
     .value {
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
-      font-weight: 600;
+      font-weight: 400;
     }
 
     .value span {
@@ -261,7 +261,6 @@ export class NumberSensorCard extends LitElement {
 
     .title {
       color: var(--number-card-text-color);
-      margin-top: 0.35em;
       font-size: var(--number-card-title-font-size);
       line-height: 1.1;
     }
