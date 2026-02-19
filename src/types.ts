@@ -38,7 +38,7 @@ export interface SeverityConfig {
 export interface NumberSensorCardConfig {
   type: "custom:number-sensor-card";
   entity: string;
-  name?: string;
+  title?: string;
   attribute?: string;
   show_unit?: boolean;
   unit?: string;

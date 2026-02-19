@@ -31,7 +31,7 @@ type: custom:number-sensor-card
 ```yaml
 type: custom:number-sensor-card
 entity: sensor.power_usage
-name: Power
+title: Power
 decimals: 1
 show_unit: true
 legacy_sizing: false
@@ -77,7 +77,7 @@ Breaking changes in v2:
 1. Card type changed from `custom:number-card` to `custom:number-sensor-card`.
 2. Legacy option names were removed (`scale`, `hideunit`, `round`, `from`, `noneString`, `bnStyle`, `color`, and similar).
 3. Use these replacements:
-   - `title` -> `name`
+   - `name` -> `title`
    - `scale` -> `base_size`
    - `hideunit` -> `show_unit` (inverted)
    - `round` -> `decimals`

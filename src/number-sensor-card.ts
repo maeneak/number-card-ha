@@ -154,7 +154,7 @@ export class NumberSensorCard extends LitElement {
     const unavailable = numericValue === null;
 
     const title =
-      this._config.name || entity.attributes.friendly_name || this._config.entity;
+      this._config.title || entity.attributes.friendly_name || this._config.entity;
     const displayText = unavailable
       ? this._config.none_text ?? String(rawValue ?? "")
       : formatValue(rawValue, this._config.decimals, this.hass.locale.language);
@@ -167,12 +167,23 @@ export class NumberSensorCard extends LitElement {
         ? null
         : toPercent(numericValue, this._config.min, this._config.max);
     const colors = resolveColors(this._config, numericValue);
+    const normalizedPercent =
+      percent === null ? null : Math.min(100, Math.max(0, percent));
+    const isFullBackground =
+      normalizedPercent === null || normalizedPercent >= 99.999;
+    const isFullFill = normalizedPercent !== null && normalizedPercent <= 0.001;
+    const useSplitGradient = !isFullBackground && !isFullFill;
+    const solidColor = isFullFill ? colors.fill : colors.background;
 
     const cssVars: Record<string, string> = {
       "--number-card-text-color": colors.text,
       "--number-card-value-color": colors.valueText,
       "--number-card-fill-color": colors.fill,
       "--number-card-background-color": colors.background,
+      "--number-card-solid-color": solidColor,
+      "--number-card-gradient": useSplitGradient
+        ? "linear-gradient(to var(--number-card-direction), var(--number-card-background-color) 0%, var(--number-card-background-color) var(--number-card-percent), var(--number-card-fill-color) var(--number-card-percent), var(--number-card-fill-color) 100%)"
+        : "none",
       "--number-card-direction": this._config.fill_direction,
       "--number-card-base-size": this._config.base_size,
       "--number-card-value-font-size":
@@ -182,7 +193,7 @@ export class NumberSensorCard extends LitElement {
       "--number-card-padding":
         this._config.card_padding ?? "8px",
       "--number-card-unit-opacity": String(this._config.unit_opacity),
-      "--number-card-percent": `${percent ?? 100}%`
+      "--number-card-percent": `${normalizedPercent ?? 100}%`
     };
 
     const hasAnyAction =
@@ -232,18 +243,15 @@ export class NumberSensorCard extends LitElement {
       text-align: center;
       color: var(--number-card-text-color);
       padding: var(--number-card-padding);
-      background: linear-gradient(
-        to var(--number-card-direction),
-        var(--number-card-background-color) var(--number-card-percent),
-        var(--number-card-fill-color) var(--number-card-percent)
-      );
+      background-color: var(--number-card-solid-color);
+      background-image: var(--number-card-gradient);
       transition: background 180ms ease, color 180ms ease;
     }
 
     .value {
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
-      font-weight: 600;
+      font-weight: 400;
       display: flex;
       justify-content: center;
       align-items: baseline;
@@ -264,7 +272,6 @@ export class NumberSensorCard extends LitElement {
 
     .title {
       color: var(--number-card-text-color);
-      margin-top: 0.35em;
       font-size: var(--number-card-title-font-size);
       line-height: 1.1;
     }
