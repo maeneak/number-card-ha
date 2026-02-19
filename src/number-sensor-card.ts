@@ -170,6 +170,7 @@ export class NumberSensorCard extends LitElement {
 
     const cssVars: Record<string, string> = {
       "--number-card-text-color": colors.text,
+      "--number-card-value-color": colors.valueText,
       "--number-card-fill-color": colors.fill,
       "--number-card-background-color": colors.background,
       "--number-card-direction": this._config.fill_direction,
@@ -244,6 +245,11 @@ export class NumberSensorCard extends LitElement {
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
       font-weight: 600;
+    }
+
+    .value span {
+      color: var(--number-card-value-color);
+      transition: color 180ms ease;
     }
 
     .value small {

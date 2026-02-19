@@ -223,12 +223,12 @@ export class NumberSensorCardEditor
                     )}
                 ></ha-textfield>
                 <ha-textfield
-                  .label=${"Fill Color"}
-                  .value=${item.fill_color ?? ""}
+                  .label=${"Progress Color"}
+                  .value=${item.progress_color ?? ""}
                   @input=${(event: Event) =>
                     this._updateSeverityField(
                       index,
-                      "fill_color",
+                      "progress_color",
                       (event.target as HTMLInputElement).value
                     )}
                 ></ha-textfield>

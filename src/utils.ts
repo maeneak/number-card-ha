@@ -49,7 +49,7 @@ export function normalizeConfig(
     .map((item) => ({
       min: toRangeBound(item.min),
       max: toRangeBound(item.max),
-      fill_color: item.fill_color?.trim() || undefined,
+      progress_color: item.progress_color?.trim() || undefined,
       text_color: item.text_color?.trim() || undefined,
       background_color: item.background_color?.trim() || undefined
     }))
@@ -138,11 +138,13 @@ function matchSeverity(
 export function resolveColors(
   config: NormalizedNumberSensorCardConfig,
   value: number | null
-): { text: string; fill: string; background: string } {
+): { text: string; valueText: string; fill: string; background: string } {
   const matched = value === null ? null : matchSeverity(value, config.severity);
+  const cardText = config.text_color ?? DEFAULT_TEXT_COLOR;
   return {
-    text: matched?.text_color ?? config.text_color ?? DEFAULT_TEXT_COLOR,
-    fill: matched?.fill_color ?? config.fill_color ?? DEFAULT_FILL_COLOR,
+    text: cardText,
+    valueText: matched?.text_color ?? cardText,
+    fill: matched?.progress_color ?? config.fill_color ?? DEFAULT_FILL_COLOR,
     background:
       matched?.background_color ??
       config.background_color ??
