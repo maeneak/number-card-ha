@@ -301,6 +301,9 @@ const ct=t=>(e,i)=>{void 0!==i?i.addInitializer(()=>{customElements.define(t,e)}
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
       font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
     }
 
     .value span {
@@ -310,9 +313,9 @@ const ct=t=>(e,i)=>{void 0!==i?i.addInitializer(()=>{customElements.define(t,e)}
 
     .value small {
       color: var(--number-card-text-color);
-      margin-left: 0.25em;
+      margin-left: 0.15em;
       opacity: var(--number-card-unit-opacity);
-      font-size: 0.45em;
+      font-size: 0.8em;
       font-weight: 500;
     }
 

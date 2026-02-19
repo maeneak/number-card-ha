@@ -244,6 +244,9 @@ export class NumberSensorCard extends LitElement {
       font-size: var(--number-card-value-font-size);
       line-height: 1.1;
       font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
     }
 
     .value span {
@@ -253,9 +256,9 @@ export class NumberSensorCard extends LitElement {
 
     .value small {
       color: var(--number-card-text-color);
-      margin-left: 0.25em;
+      margin-left: 0.15em;
       opacity: var(--number-card-unit-opacity);
-      font-size: 0.45em;
+      font-size: 0.8em;
       font-weight: 500;
     }
 
