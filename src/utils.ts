@@ -49,7 +49,10 @@ export function normalizeConfig(
     .map((item) => ({
       min: toRangeBound(item.min),
       max: toRangeBound(item.max),
-      progress_color: item.progress_color?.trim() || undefined,
+      progress_color:
+        item.progress_color?.trim() ||
+        item.fill_color?.trim() ||
+        undefined,
       text_color: item.text_color?.trim() || undefined,
       background_color: item.background_color?.trim() || undefined
     }))

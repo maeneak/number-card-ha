@@ -29,6 +29,7 @@ export interface CardActionConfig {
 export interface SeverityConfig {
   min?: number;
   max?: number;
+  fill_color?: string;
   progress_color?: string;
   text_color?: string;
   background_color?: string;

@@ -47,7 +47,10 @@ export class NumberSensorCardEditor
       ...DEFAULT_EDITOR_CONFIG,
       ...config,
       type: "custom:number-sensor-card",
-      severity: config.severity ?? []
+      severity: (config.severity ?? []).map((item) => ({
+        ...item,
+        progress_color: item.progress_color ?? item.fill_color
+      }))
     };
   }
 
