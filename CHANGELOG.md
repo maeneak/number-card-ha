@@ -6,6 +6,7 @@
 
 - Migrated card type to `custom:number-sensor-card`.
 - Removed backward compatibility for legacy config keys.
+- Renamed config property `name` to `title`.
 - Changed HACS artifact to `dist/number-sensor-card.js`.
 - Rebuilt implementation as Lit + TypeScript with modern action handling.
 

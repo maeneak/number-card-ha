@@ -402,7 +402,7 @@ export class NumberSensorCardEditor
   private _computeLabel = (schema: { name: string }) => {
     const labels: Record<string, string> = {
       entity: "Entity",
-      name: "Name",
+      title: "Title",
       attribute: "Attribute",
       show_unit: "Show Unit",
       unit: "Unit Override",
@@ -428,7 +428,7 @@ export class NumberSensorCardEditor
 
   private readonly _basicSchema = [
     { name: "entity", required: true, selector: { entity: {} } },
-    { name: "name", selector: { text: {} } },
+    { name: "title", selector: { text: {} } },
     { name: "attribute", selector: { text: {} } }
   ];
 

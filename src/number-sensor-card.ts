@@ -154,7 +154,7 @@ export class NumberSensorCard extends LitElement {
     const unavailable = numericValue === null;
 
     const title =
-      this._config.name || entity.attributes.friendly_name || this._config.entity;
+      this._config.title || entity.attributes.friendly_name || this._config.entity;
     const displayText = unavailable
       ? this._config.none_text ?? String(rawValue ?? "")
       : formatValue(rawValue, this._config.decimals, this.hass.locale.language);
