@@ -2,6 +2,7 @@ import { LitElement, css, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { computeStateDisplay } from "custom-card-helpers";
 import type { HomeAssistant, LovelaceCardEditor } from "custom-card-helpers";
 import "./number-sensor-card-editor";
 import type {
@@ -50,7 +51,10 @@ export class NumberSensorCard extends LitElement {
   public static getStubConfig(hass?: HomeAssistant): NumberSensorCardConfig {
     const fallbackEntity =
       hass &&
-      Object.keys(hass.states).find((entityId) => entityId.startsWith("sensor."));
+      Object.keys(hass.states).find(
+        (entityId) =>
+          entityId.startsWith("sensor.") || entityId.startsWith("binary_sensor.")
+      );
     return {
       type: "custom:number-sensor-card",
       entity: fallbackEntity ?? ""
@@ -150,17 +154,27 @@ export class NumberSensorCard extends LitElement {
     const rawValue = this._config.attribute
       ? entity.attributes[this._config.attribute]
       : entity.state;
-    const numericValue = toFiniteNumber(rawValue);
-    const unavailable = numericValue === null;
+    const isBinarySensorStateText =
+      !this._config.attribute && entity.entity_id.startsWith("binary_sensor.");
+    const numericValue = isBinarySensorStateText ? null : toFiniteNumber(rawValue);
+    const unavailable = isBinarySensorStateText
+      ? entity.state === "unknown" || entity.state === "unavailable"
+      : numericValue === null;
 
     const title =
       this._config.title || entity.attributes.friendly_name || this._config.entity;
     const displayText = unavailable
       ? this._config.none_text ?? String(rawValue ?? "")
-      : formatValue(rawValue, this._config.decimals, this.hass.locale.language);
+      : isBinarySensorStateText
+        ? computeStateDisplay(this.hass.localize, entity, this.hass.locale)
+        : formatValue(numericValue, this._config.decimals, this.hass.locale.language);
     const unit = this._config.unit ?? entity.attributes.unit_of_measurement ?? "";
     const showUnit =
-      this._config.show_unit && !unavailable && typeof unit === "string" && unit !== "";
+      this._config.show_unit &&
+      !isBinarySensorStateText &&
+      !unavailable &&
+      typeof unit === "string" &&
+      unit !== "";
 
     const percent =
       numericValue === null
