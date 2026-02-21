@@ -4,6 +4,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { computeStateDisplay } from "custom-card-helpers";
 import type { HomeAssistant, LovelaceCardEditor } from "custom-card-helpers";
+import type { HassEntity } from "home-assistant-js-websocket";
 import "./number-sensor-card-editor";
 import type {
   NormalizedNumberSensorCardConfig,
@@ -20,6 +21,17 @@ import { hasAction, runAction } from "./actions";
 
 interface NumberSensorCardEditorElement extends LovelaceCardEditor, HTMLElement {
   setConfig(config: NumberSensorCardConfig): void;
+}
+
+function humanizeDeviceClass(deviceClass: string): string {
+  return deviceClass.replace(/_/g, " ").trim().toLowerCase();
+}
+
+function toTitleCase(text: string): string {
+  return text.replace(/\w\S*/g, (word) => {
+    const [first = "", ...rest] = word;
+    return `${first.toUpperCase()}${rest.join("")}`;
+  });
 }
 
 declare global {
@@ -135,6 +147,83 @@ export class NumberSensorCard extends LitElement {
     }
     event.preventDefault();
     void this._triggerAction("tap");
+  };
+
+  private _localizeFirst(keys: string[]): string | null {
+    if (!this.hass) {
+      return null;
+    }
+    for (const key of keys) {
+      const localized = this.hass.localize(key);
+      if (
+        typeof localized === "string" &&
+        localized.trim() !== "" &&
+        localized !== key
+      ) {
+        return localized;
+      }
+    }
+    return null;
+  }
+
+  private _formatBinarySensorStateText(entity: HassEntity): string {
+    if (!this.hass) {
+      return entity.state;
+    }
+    if (entity.state === "unknown" || entity.state === "unavailable") {
+      return this.hass.localize(`state.default.${entity.state}`) ?? entity.state;
+    }
+    const state = entity.state;
+    if (state !== "on" && state !== "off") {
+      return state;
+    }
+
+    const deviceClass = (() => {
+      const deviceClassValue = entity.attributes.device_class;
+      if (typeof deviceClassValue === "string" && deviceClassValue.trim() !== "") {
+        return deviceClassValue.trim();
+      }
+      const stateClassValue = entity.attributes.state_class;
+      if (typeof stateClassValue === "string" && stateClassValue.trim() !== "") {
+        return stateClassValue.trim();
+      }
+      return "";
+    })();
+
+    if (deviceClass) {
+      const localizedByClass = this._localizeFirst([
+        `component.binary_sensor.entity_component.${deviceClass}.state.${state}`,
+        `component.binary_sensor.state.${deviceClass}.${state}`
+      ]);
+      if (localizedByClass) {
+        return localizedByClass;
+      }
+    }
+
+    const computedState = computeStateDisplay(
+      this.hass.localize,
+      entity,
+      this.hass.locale
+    );
+    if (!deviceClass) {
+      return this._localizeFirst([`state.default.${state}`]) ?? state;
+    }
+    const genericBinaryStateText = this._localizeFirst([
+      `component.binary_sensor.entity_component._.state.${state}`,
+      `component.binary_sensor.state._.${state}`,
+      `state.default.${state}`
+    ]);
+    const isGenericBinaryState =
+      computedState.trim().toLowerCase() === state ||
+      computedState === genericBinaryStateText;
+    if (!isGenericBinaryState) {
+      return computedState;
+    }
+
+    const readableClass = humanizeDeviceClass(deviceClass);
+    return state === "on"
+      ? toTitleCase(readableClass)
+      : `Not ${readableClass}`;
   }
 
   protected render() {
@@ -166,7 +255,7 @@ export class NumberSensorCard extends LitElement {
     const displayText = unavailable
       ? this._config.none_text ?? String(rawValue ?? "")
       : isBinarySensorStateText
-        ? computeStateDisplay(this.hass.localize, entity, this.hass.locale)
+        ? this._formatBinarySensorStateText(entity)
         : formatValue(numericValue, this._config.decimals, this.hass.locale.language);
     const unit = this._config.unit ?? entity.attributes.unit_of_measurement ?? "";
     const showUnit =
