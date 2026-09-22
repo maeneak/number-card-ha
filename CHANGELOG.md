@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+
+- `binary_sensor` entity support: state text is localized via the entity's device class, with severity/progress handling skipped for non-numeric states.
+
+### Fixed
+
+- Severity levels added from the visual editor showed no input boxes. Each level is now rendered with `ha-form` (number selectors for min/max, text selectors for the colors) inside its own bordered row, instead of bare `ha-textfield` elements in a fixed six-column grid that overflowed the editor panel.
+- Decimal handling for formatted values.
+
 ## 2.0.0
 
 ### Breaking

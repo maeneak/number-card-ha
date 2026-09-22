@@ -204,65 +204,24 @@ export class NumberSensorCardEditor
           ${severity.map(
             (item, index) => html`
               <div class="severity-row">
-                <ha-textfield
-                  .label=${"Min"}
-                  .type=${"number"}
-                  .value=${item.min !== undefined ? String(item.min) : ""}
-                  @input=${(event: Event) =>
-                    this._updateSeverityField(
-                      index,
-                      "min",
-                      (event.target as HTMLInputElement).value
-                    )}
-                ></ha-textfield>
-                <ha-textfield
-                  .label=${"Max"}
-                  .type=${"number"}
-                  .value=${item.max !== undefined ? String(item.max) : ""}
-                  @input=${(event: Event) =>
-                    this._updateSeverityField(
-                      index,
-                      "max",
-                      (event.target as HTMLInputElement).value
-                    )}
-                ></ha-textfield>
-                <ha-textfield
-                  .label=${"Progress Color"}
-                  .value=${item.progress_color ?? ""}
-                  @input=${(event: Event) =>
-                    this._updateSeverityField(
-                      index,
-                      "progress_color",
-                      (event.target as HTMLInputElement).value
-                    )}
-                ></ha-textfield>
-                <ha-textfield
-                  .label=${"Text Color"}
-                  .value=${item.text_color ?? ""}
-                  @input=${(event: Event) =>
-                    this._updateSeverityField(
-                      index,
-                      "text_color",
-                      (event.target as HTMLInputElement).value
-                    )}
-                ></ha-textfield>
-                <ha-textfield
-                  .label=${"Background Color"}
-                  .value=${item.background_color ?? ""}
-                  @input=${(event: Event) =>
-                    this._updateSeverityField(
-                      index,
-                      "background_color",
-                      (event.target as HTMLInputElement).value
-                    )}
-                ></ha-textfield>
-                <button
-                  type="button"
-                  class="remove"
-                  @click=${() => this._removeSeverity(index)}
-                >
-                  Remove
-                </button>
+                <div class="severity-header">
+                  <span>Level ${index + 1}</span>
+                  <button
+                    type="button"
+                    class="remove"
+                    @click=${() => this._removeSeverity(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <ha-form
+                  .hass=${this.hass}
+                  .schema=${this._severitySchema}
+                  .data=${item}
+                  .computeLabel=${this._computeSeverityLabel}
+                  @value-changed=${(event: ValueChangedEvent<SeverityConfig>) =>
+                    this._updateSeverity(index, event.detail.value)}
+                ></ha-form>
               </div>
             `
           )}
@@ -335,20 +294,28 @@ export class NumberSensorCardEditor
     this._setConfigValue("severity", severity);
   }
 
-  private _updateSeverityField(
-    index: number,
-    field: keyof SeverityConfig,
-    value: number | string
-  ) {
+  private _updateSeverity(index: number, value: SeverityConfig) {
     const severity = [...(this._value.severity ?? [])];
-    const current = { ...severity[index] };
-    if (field === "min" || field === "max") {
-      current[field] = this._parseOptionalNumber(value);
-    } else {
-      const trimmed = String(value).trim();
-      current[field] = trimmed || undefined;
+    const next: SeverityConfig = {};
+    const min = this._parseOptionalNumber(value.min ?? "");
+    const max = this._parseOptionalNumber(value.max ?? "");
+    if (min !== undefined) {
+      next.min = min;
     }
-    severity[index] = current;
+    if (max !== undefined) {
+      next.max = max;
+    }
+    for (const field of [
+      "progress_color",
+      "text_color",
+      "background_color"
+    ] as const) {
+      const trimmed = String(value[field] ?? "").trim();
+      if (trimmed) {
+        next[field] = trimmed;
+      }
+    }
+    severity[index] = next;
     this._setConfigValue("severity", severity);
   }
 
@@ -425,6 +392,31 @@ export class NumberSensorCardEditor
     };
     return labels[schema.name] ?? schema.name;
   };
+
+  private _computeSeverityLabel = (schema: { name: string }) => {
+    const labels: Record<string, string> = {
+      min: "Min",
+      max: "Max",
+      progress_color: "Progress Color",
+      text_color: "Text Color",
+      background_color: "Background Color"
+    };
+    return labels[schema.name] ?? schema.name;
+  };
+
+  private readonly _severitySchema = [
+    {
+      name: "",
+      type: "grid",
+      schema: [
+        { name: "min", selector: { number: { mode: "box", step: "any" } } },
+        { name: "max", selector: { number: { mode: "box", step: "any" } } },
+        { name: "progress_color", selector: { text: {} } },
+        { name: "text_color", selector: { text: {} } },
+        { name: "background_color", selector: { text: {} } }
+      ]
+    }
+  ];
 
   private readonly _basicSchema = [
     { name: "entity", required: true, selector: { entity: {} } },
@@ -540,10 +532,23 @@ export class NumberSensorCardEditor
     }
 
     .severity-row {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(120px, 1fr)) auto;
-      gap: 8px;
-      align-items: end;
+      display: block;
+      border: 1px solid var(--divider-color);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .severity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .severity-row ha-form {
+      padding: 0;
     }
 
     button {
